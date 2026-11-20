@@ -19,7 +19,7 @@ export const PartnersStrip: React.FC = () => {
           Global Partners
         </span>
         <div className="flex flex-wrap items-center gap-4 sm:gap-6 py-2">
-          {GLOBAL_PARTNERS.map((partner) => (
+          {GLOBAL_PARTNERS.map((partner: string) => (
             <div
               key={partner}
               className="px-4 py-2 rounded-xl bg-[#1e1e24] border border-white/5 text-xs font-black tracking-wider text-neutral-300 uppercase hover:text-white hover:border-red-500/40 transition-colors cursor-pointer"
@@ -36,7 +36,7 @@ export const PartnersStrip: React.FC = () => {
           Official Partners
         </span>
         <div className="flex flex-wrap items-center gap-3 py-1">
-          {OFFICIAL_PARTNERS.map((partner) => (
+          {OFFICIAL_PARTNERS.map((partner: string) => (
             <span
               key={partner}
               className="text-[11px] font-bold text-neutral-400 hover:text-white transition-colors cursor-pointer uppercase tracking-wide"

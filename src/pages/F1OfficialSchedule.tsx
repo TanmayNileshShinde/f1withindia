@@ -1,8 +1,11 @@
-import React from 'react';
-import { CALENDAR_2026 } from '../data/f1OfficialData';
+import React, { useState } from 'react';
+import { FULL_24_CALENDAR, TrackDetail } from '../data/f1OfficialData';
 import { Calendar, MapPin, ChevronRight, Trophy } from 'lucide-react';
+import CircuitModal from '../components/f1/CircuitModal';
 
 export const F1OfficialSchedule: React.FC = () => {
+  const [selectedCircuit, setSelectedCircuit] = useState<TrackDetail | null>(null);
+
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Page Header */}
@@ -11,22 +14,22 @@ export const F1OfficialSchedule: React.FC = () => {
           F1 Schedule 2026
         </h1>
         <p className="text-xs sm:text-sm text-neutral-400 mt-2 font-mono">
-          2026 FIA FORMULA ONE WORLD CHAMPIONSHIP™ RACE CALENDAR
+          2026 FIA FORMULA ONE WORLD CHAMPIONSHIP™ OFFICIAL 24-RACE CALENDAR
         </p>
       </div>
 
       {/* Calendar List Cards */}
       <div className="space-y-4">
-        {CALENDAR_2026.map((race) => (
+        {FULL_24_CALENDAR.map((race) => (
           <div
             key={race.round}
-            className={`p-6 rounded-2xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-6 f1-card-hover ${
+            className={`p-6 rounded-2xl border transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-6 f1-card-hover ${
               race.status === 'LIVE'
                 ? 'bg-gradient-to-r from-red-950/80 via-[#1c1212] to-[#15151e] border-red-500 shadow-[0_0_25px_rgba(225,6,0,0.3)]'
                 : 'bg-[#1e1e24] border-white/5'
             }`}
           >
-            {/* Left: Round & Country Flag */}
+            {/* Left: Round & Info */}
             <div className="flex items-center gap-6">
               <div className="text-center w-14 shrink-0">
                 <span className="text-[10px] font-mono font-bold text-[#e10600] uppercase block">
@@ -41,7 +44,9 @@ export const F1OfficialSchedule: React.FC = () => {
 
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-xl">{race.flag}</span>
+                  <span className="px-2 py-0.5 rounded bg-black/40 text-neutral-300 font-mono text-xs font-bold">
+                    {race.flag}
+                  </span>
                   <span className="font-bold text-white text-lg uppercase font-syne">
                     {race.country}
                   </span>
@@ -65,30 +70,49 @@ export const F1OfficialSchedule: React.FC = () => {
               </div>
             </div>
 
-            {/* Right: Dates & Winner */}
-            <div className="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 border-white/5 pt-3 md:pt-0">
-              <div className="text-left md:text-right">
+            {/* Middle: Mini Track Vector Outline */}
+            <div className="hidden xl:flex items-center justify-center w-36 h-20 bg-black/30 rounded-xl p-2 border border-white/5 shrink-0">
+              <svg
+                className="w-full h-full stroke-neutral-400 hover:stroke-[#e10600] fill-none stroke-[2.5] transition-colors"
+                viewBox="0 0 160 100"
+              >
+                <path d={race.svgPath} strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+
+            {/* Right: Dates & Action */}
+            <div className="flex items-center justify-between lg:justify-end gap-6 border-t lg:border-t-0 border-white/5 pt-3 lg:pt-0">
+              <div className="text-left lg:text-right">
                 <span className="text-xs font-mono font-bold text-white block">
                   {race.dates}
                 </span>
                 {race.winner ? (
-                  <span className="text-[11px] font-mono text-amber-400 font-semibold flex items-center md:justify-end gap-1 mt-0.5">
+                  <span className="text-[11px] font-mono text-amber-400 font-semibold flex items-center lg:justify-end gap-1 mt-0.5">
                     <Trophy size={11} /> Winner: {race.winner}
                   </span>
                 ) : (
                   <span className="text-[11px] font-mono text-neutral-400 block mt-0.5">
-                    Sessions: FP1, FP2, FP3, Quali, Race
+                    {race.turns} Turns • {race.trackLength}
                   </span>
                 )}
               </div>
 
-              <button className="px-4 py-2 rounded-xl bg-neutral-900 hover:bg-[#e10600] text-white text-xs font-bold uppercase tracking-wider transition-colors border border-white/5">
-                Explore &gt;
+              <button
+                onClick={() => setSelectedCircuit(race)}
+                className="px-4 py-2 rounded-xl bg-neutral-900 hover:bg-[#e10600] text-white text-xs font-bold uppercase tracking-wider transition-colors border border-white/5 active:scale-95 shrink-0"
+              >
+                Circuit Guide &gt;
               </button>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Circuit Modal */}
+      <CircuitModal
+        track={selectedCircuit}
+        onClose={() => setSelectedCircuit(null)}
+      />
     </div>
   );
 };

@@ -23,7 +23,7 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#15151e] text-slate-100 flex flex-col font-sans selection:bg-[#e10600] selection:text-white">
+    <div className="min-h-screen bg-[#15151e] text-slate-100 flex flex-col font-sans selection:bg-[#e10600] selection:text-white antialiased">
       {/* Official Formula 1 Top Header & Weekend Ticker */}
       <OfficialHeader
         currentPage={currentPage}
@@ -42,7 +42,7 @@ export function App() {
           <F1OfficialResults />
         )}
         {currentPage === 'standings' && (
-          <F1Standings dsaMode={false} />
+          <F1Standings />
         )}
         {currentPage === 'drivers' && (
           <F1OfficialDrivers />
@@ -51,7 +51,7 @@ export function App() {
           <F1OfficialTeams />
         )}
         {currentPage === 'timing' && (
-          <F1LiveTiming dsaMode={false} />
+          <F1LiveTiming />
         )}
       </main>
 

@@ -1,8 +1,11 @@
-import React from 'react';
-import { DRIVERS_2026 } from '../data/f1OfficialData';
-import { Trophy, Award } from 'lucide-react';
+import React, { useState } from 'react';
+import { ALL_20_DRIVERS, DriverBio } from '../data/f1OfficialData';
+import { Trophy, Award, ChevronRight } from 'lucide-react';
+import DriverModal from '../components/f1/DriverModal';
 
 export const F1OfficialDrivers: React.FC = () => {
+  const [selectedDriver, setSelectedDriver] = useState<DriverBio | null>(null);
+
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Header */}
@@ -11,26 +14,29 @@ export const F1OfficialDrivers: React.FC = () => {
           F1 Drivers 2026
         </h1>
         <p className="text-xs sm:text-sm text-neutral-400 mt-2 font-mono">
-          CHECK OUT THIS SEASON'S OFFICIAL FORMULA 1 DRIVERS LINE-UP
+          CHECK OUT THIS SEASON'S OFFICIAL 20-DRIVER FORMULA 1 GRID
         </p>
       </div>
 
       {/* Drivers Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {DRIVERS_2026.map((driver) => (
+        {ALL_20_DRIVERS.map((driver) => (
           <div
             key={driver.id}
-            className="group cursor-pointer rounded-2xl bg-[#1e1e24] border border-white/5 overflow-hidden f1-card-hover flex flex-col justify-between h-[380px] relative"
+            onClick={() => setSelectedDriver(driver)}
+            className="group cursor-pointer rounded-2xl bg-[#1e1e24] border border-white/5 overflow-hidden f1-card-hover flex flex-col justify-between h-[390px] relative"
           >
             {/* Top Info */}
             <div className="p-5 z-10">
               <div className="flex items-start justify-between">
                 <div>
                   <span className="text-4xl font-black text-white font-syne italic block leading-none">
-                    {driver.number}
+                    #{driver.number}
                   </span>
                   <div className="flex items-center gap-1.5 mt-2">
-                    <span className="text-base">{driver.countryFlag}</span>
+                    <span className="px-1.5 py-0.5 rounded bg-black/50 text-[10px] font-mono text-neutral-300 font-bold">
+                      {driver.countryFlag}
+                    </span>
                     <span className="text-[10px] font-mono text-neutral-400 uppercase font-bold">
                       {driver.country}
                     </span>
@@ -55,7 +61,7 @@ export const F1OfficialDrivers: React.FC = () => {
                   {driver.lastName}
                 </span>
                 <span
-                  className="text-xs font-semibold mt-1 block"
+                  className="text-xs font-semibold mt-1 block truncate"
                   style={{ color: driver.teamColor }}
                 >
                   {driver.team}
@@ -79,6 +85,12 @@ export const F1OfficialDrivers: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {/* Driver Detail Modal */}
+      <DriverModal
+        driver={selectedDriver}
+        onClose={() => setSelectedDriver(null)}
+      />
     </div>
   );
 };

@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { Play, ChevronLeft, ChevronRight } from 'lucide-react';
-import { MUST_WATCH_VIDEOS } from '../../data/f1OfficialData';
+import { MUST_WATCH_VIDEOS_LIST } from '../../data/f1OfficialData';
+import { F1VideoItem } from '../../types/f1';
 
-export const MustWatchCarousel: React.FC = () => {
+interface MustWatchCarouselProps {
+  onSelectVideo: (video: F1VideoItem) => void;
+}
+
+export const MustWatchCarousel: React.FC<MustWatchCarouselProps> = ({ onSelectVideo }) => {
   const [scrollIndex, setScrollIndex] = useState(0);
 
   const handlePrev = () => {
@@ -10,7 +15,7 @@ export const MustWatchCarousel: React.FC = () => {
   };
 
   const handleNext = () => {
-    setScrollIndex((prev) => Math.min(MUST_WATCH_VIDEOS.length - 2, prev + 1));
+    setScrollIndex((prev) => Math.min(MUST_WATCH_VIDEOS_LIST.length - 2, prev + 1));
   };
 
   return (
@@ -38,7 +43,7 @@ export const MustWatchCarousel: React.FC = () => {
             </button>
             <button
               onClick={handleNext}
-              disabled={scrollIndex >= MUST_WATCH_VIDEOS.length - 2}
+              disabled={scrollIndex >= MUST_WATCH_VIDEOS_LIST.length - 2}
               className="w-8 h-8 rounded-full bg-neutral-900 border border-white/10 flex items-center justify-center text-neutral-300 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
             >
               <ChevronRight size={16} />
@@ -49,9 +54,10 @@ export const MustWatchCarousel: React.FC = () => {
 
       {/* Videos Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {MUST_WATCH_VIDEOS.map((video) => (
+        {MUST_WATCH_VIDEOS_LIST.slice(scrollIndex, scrollIndex + 4).map((video) => (
           <div
             key={video.id}
+            onClick={() => onSelectVideo(video)}
             className="group cursor-pointer rounded-2xl bg-[#1e1e24] border border-white/5 overflow-hidden f1-card-hover flex flex-col justify-between"
           >
             <div className="relative h-44 overflow-hidden">

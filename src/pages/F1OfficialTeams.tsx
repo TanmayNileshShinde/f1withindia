@@ -1,8 +1,11 @@
-import React from 'react';
-import { TEAMS_2026 } from '../data/f1OfficialData';
-import { Trophy, ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ALL_10_TEAMS, TeamBio } from '../data/f1OfficialData';
+import { Trophy, ChevronRight, Wrench } from 'lucide-react';
+import TeamModal from '../components/f1/TeamModal';
 
 export const F1OfficialTeams: React.FC = () => {
+  const [selectedTeam, setSelectedTeam] = useState<TeamBio | null>(null);
+
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Header */}
@@ -17,9 +20,10 @@ export const F1OfficialTeams: React.FC = () => {
 
       {/* Teams Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {TEAMS_2026.map((team) => (
+        {ALL_10_TEAMS.map((team) => (
           <div
             key={team.id}
+            onClick={() => setSelectedTeam(team)}
             className="group cursor-pointer rounded-2xl bg-[#1e1e24] border border-white/5 overflow-hidden f1-card-hover p-6 flex flex-col justify-between relative"
           >
             <div className="flex items-start justify-between border-b border-white/10 pb-4">
@@ -59,18 +63,28 @@ export const F1OfficialTeams: React.FC = () => {
               <div>
                 <span className="text-neutral-500 uppercase text-[10px] block">Chassis / Power</span>
                 <span className="text-neutral-300 font-semibold">{team.chassis}</span>
-                <span className="text-neutral-500 text-[10px] block">{team.powerUnit}</span>
+                <span className="text-neutral-500 text-[10px] block truncate">{team.powerUnit}</span>
               </div>
             </div>
 
-            {/* Bottom accent colored line */}
-            <div
-              className="h-1.5 w-full rounded-full"
-              style={{ backgroundColor: team.baseColor }}
-            />
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-xs font-bold text-[#e10600] uppercase hover:underline flex items-center gap-1">
+                View Full Team Profile <ChevronRight size={13} />
+              </span>
+              <div
+                className="h-2 w-20 rounded-full"
+                style={{ backgroundColor: team.baseColor }}
+              />
+            </div>
           </div>
         ))}
       </div>
+
+      {/* Team Detail Modal */}
+      <TeamModal
+        team={selectedTeam}
+        onClose={() => setSelectedTeam(null)}
+      />
     </div>
   );
 };

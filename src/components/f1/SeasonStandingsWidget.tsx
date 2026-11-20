@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DRIVERS_2026, TEAMS_2026 } from '../../data/f1OfficialData';
+import { DRIVERS_2026, TEAMS_2026, DriverBio, TeamBio } from '../../data/f1OfficialData';
 import { ChevronRight, ChevronDown, Trophy } from 'lucide-react';
 import { F1NavPage } from '../../types/f1';
 
@@ -161,7 +161,7 @@ export const SeasonStandingsWidget: React.FC<SeasonStandingsWidgetProps> = ({ on
           <div className="rounded-2xl bg-[#1e1e24] border border-white/5 overflow-hidden">
             <table className="w-full text-left text-xs font-mono">
               <tbody className="divide-y divide-white/5">
-                {remainingDrivers.map((d, i) => (
+                {remainingDrivers.map((d: DriverBio, i: number) => (
                   <tr key={d.id} className="hover:bg-neutral-800/40 transition-colors">
                     <td className="py-3 px-4 font-bold text-white text-sm w-12">
                       {i + 4}
@@ -224,7 +224,7 @@ export const SeasonStandingsWidget: React.FC<SeasonStandingsWidgetProps> = ({ on
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {TEAMS_2026.map((team) => (
+                {TEAMS_2026.map((team: TeamBio) => (
                   <tr key={team.id} className="hover:bg-neutral-800/40 transition-colors">
                     <td className="py-3 px-4 font-black text-white text-sm w-12">
                       <div className="flex items-center gap-2">

@@ -1,27 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { Timer, Radio, AlertTriangle, ArrowUpDown, ChevronRight, Play, RotateCcw, ShieldAlert, Cpu } from 'lucide-react';
-import { INITIAL_DRIVERS } from '../data/f1Data';
-import { F1Driver } from '../types/f1';
-import DsaBadge from '../components/f1/DsaBadge';
+import React, { useState } from 'react';
+import { Timer, Radio, Play, RotateCcw, Cpu, Zap, Activity } from 'lucide-react';
+import { ALL_20_DRIVERS } from '../data/f1OfficialData';
 import QueueVisualizer from '../components/visualizers/QueueVisualizer';
 
-interface F1LiveTimingProps {
-  dsaMode: boolean;
+interface LiveDriverRow {
+  pos: number;
+  number: number;
+  code: string;
+  name: string;
+  team: string;
+  gap: string;
+  interval: string;
+  lastLap: string;
+  s1: string;
+  s2: string;
+  s3: string;
+  tyre: 'SOFT' | 'MEDIUM' | 'HARD' | 'INTER';
+  tyreAge: number;
+  pits: number;
+  speedTrap: number;
+  color: string;
 }
 
-export const F1LiveTiming: React.FC<F1LiveTimingProps> = ({ dsaMode }) => {
-  const [drivers, setDrivers] = useState<F1Driver[]>(INITIAL_DRIVERS);
-  const [showVisualizer, setShowVisualizer] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState<string>('00:00:02 ago');
-  const [telemetryCount, setTelemetryCount] = useState(142);
-  const [activeTab, setActiveTab] = useState<'leaderboard' | 'queueArchitecture'>('leaderboard');
+export const F1LiveTiming: React.FC<{ dsaMode?: boolean }> = () => {
+  const [drivers, setDrivers] = useState<LiveDriverRow[]>([
+    { pos: 1, number: 63, code: 'RUS', name: 'George Russell', team: 'Mercedes-AMG', gap: 'LEADER', interval: '-', lastLap: '1:33.812', s1: '26.4', s2: '38.1', s3: '29.3', tyre: 'SOFT', tyreAge: 8, pits: 1, speedTrap: 342.1, color: '#27f4d2' },
+    { pos: 2, number: 10, code: 'GAS', name: 'Pierre Gasly', team: 'Alpine', gap: '+0.182', interval: '+0.182', lastLap: '1:33.994', s1: '26.5', s2: '38.2', s3: '29.2', tyre: 'MEDIUM', tyreAge: 11, pits: 1, speedTrap: 338.4, color: '#ff87bc' },
+    { pos: 3, number: 16, code: 'LEC', name: 'Charles Leclerc', team: 'Ferrari', gap: '+0.245', interval: '+0.063', lastLap: '1:34.057', s1: '26.4', s2: '38.4', s3: '29.2', tyre: 'SOFT', tyreAge: 6, pits: 1, speedTrap: 340.8, color: '#e8002d' },
+    { pos: 4, number: 12, code: 'ANT', name: 'Kimi Antonelli', team: 'Mercedes-AMG', gap: '+0.310', interval: '+0.065', lastLap: '1:34.122', s1: '26.6', s2: '38.2', s3: '29.3', tyre: 'SOFT', tyreAge: 7, pits: 1, speedTrap: 343.2, color: '#27f4d2' },
+    { pos: 5, number: 1, code: 'VER', name: 'Max Verstappen', team: 'Red Bull Racing', gap: '+0.450', interval: '+0.140', lastLap: '1:34.262', s1: '26.7', s2: '38.3', s3: '29.2', tyre: 'MEDIUM', tyreAge: 14, pits: 1, speedTrap: 341.5, color: '#3671c6' },
+    { pos: 6, number: 4, code: 'NOR', name: 'Lando Norris', team: 'McLaren', gap: '+0.512', interval: '+0.062', lastLap: '1:34.324', s1: '26.5', s2: '38.5', s3: '29.3', tyre: 'HARD', tyreAge: 18, pits: 1, speedTrap: 339.6, color: '#ff8000' },
+    { pos: 7, number: 44, code: 'HAM', name: 'Lewis Hamilton', team: 'Ferrari', gap: '+0.680', interval: '+0.168', lastLap: '1:34.492', s1: '26.8', s2: '38.4', s3: '29.2', tyre: 'MEDIUM', tyreAge: 12, pits: 1, speedTrap: 338.9, color: '#e8002d' },
+    { pos: 8, number: 81, code: 'PIA', name: 'Oscar Piastri', team: 'McLaren', gap: '+0.744', interval: '+0.064', lastLap: '1:34.556', s1: '26.7', s2: '38.5', s3: '29.3', tyre: 'HARD', tyreAge: 16, pits: 1, speedTrap: 339.2, color: '#ff8000' },
+    { pos: 9, number: 55, code: 'SAI', name: 'Carlos Sainz', team: 'Williams', gap: '+0.890', interval: '+0.146', lastLap: '1:34.702', s1: '26.9', s2: '38.5', s3: '29.3', tyre: 'MEDIUM', tyreAge: 15, pits: 1, speedTrap: 337.8, color: '#64c4ff' },
+    { pos: 10, number: 14, code: 'ALO', name: 'Fernando Alonso', team: 'Aston Martin', gap: '+1.105', interval: '+0.215', lastLap: '1:34.917', s1: '27.0', s2: '38.6', s3: '29.3', tyre: 'HARD', tyreAge: 21, pits: 1, speedTrap: 336.5, color: '#229971' },
+  ]);
 
-  // Simulate incoming telemetry packet from Queue FIFO
-  const simulateNextLapPacket = () => {
-    setDrivers((prev) => {
-      return prev.map((d) => {
-        // slight jitter to simulate live telemetry
-        const jitter = (Math.random() * 0.2 - 0.1).toFixed(3);
+  const [showBufferInspector, setShowBufferInspector] = useState(false);
+  const [telemetryFrames, setTelemetryFrames] = useState(284);
+  const [lastUpdated, setLastUpdated] = useState('00:00:01 ago');
+
+  const processIncomingPacket = () => {
+    setDrivers((prev) =>
+      prev.map((d) => {
+        const jitter = (Math.random() * 0.15 - 0.075).toFixed(3);
         const parts = d.lastLap.split(':');
         const seconds = (parseFloat(parts[1]) + parseFloat(jitter)).toFixed(3);
         return {
@@ -29,9 +51,9 @@ export const F1LiveTiming: React.FC<F1LiveTimingProps> = ({ dsaMode }) => {
           lastLap: `${parts[0]}:${seconds.padStart(6, '0')}`,
           speedTrap: Math.round(d.speedTrap + (Math.random() * 2 - 1)),
         };
-      });
-    });
-    setTelemetryCount((c) => c + 1);
+      })
+    );
+    setTelemetryFrames((c) => c + 1);
     setLastUpdated('Just now');
   };
 
@@ -42,53 +64,43 @@ export const F1LiveTiming: React.FC<F1LiveTimingProps> = ({ dsaMode }) => {
         <div>
           <div className="flex items-center gap-2 text-xs font-mono text-[#e10600] font-bold uppercase tracking-wider mb-1">
             <span className="w-2.5 h-2.5 rounded-full bg-red-600 animate-pulse" />
-            Live Race Session • Circuit de Monaco
+            Live Practice Session • Las Vegas Strip Circuit
           </div>
-          <h1 className="text-3xl sm:text-4xl font-black text-white uppercase italic tracking-tight font-syne">
+          <h1 className="text-3xl sm:text-5xl font-black text-white uppercase italic tracking-tight font-syne">
             Live Timing & Telemetry
           </h1>
-          <p className="text-xs sm:text-sm text-neutral-400 mt-1">
-            Real-time track positioning, sector splits, speed trap indices, and pit delta calculations.
+          <p className="text-xs sm:text-sm text-neutral-400 mt-2 font-mono">
+            REAL-TIME TRACK POSITIONING, SECTOR SPLITS & PIT STOP INTERVALS
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button
-            onClick={simulateNextLapPacket}
+            onClick={processIncomingPacket}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#e10600] hover:bg-red-700 text-white font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(225,6,0,0.3)] active:scale-95"
           >
-            <Play size={14} /> Process Telemetry Packet (FIFO)
+            <Play size={14} /> Process Live Telemetry Packet
           </button>
 
           <button
-            onClick={() => setShowVisualizer(!showVisualizer)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-neutral-700 text-neutral-200 font-mono text-xs font-bold transition-all"
+            onClick={() => setShowBufferInspector(!showBufferInspector)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-neutral-800 border border-white/10 text-neutral-200 font-mono text-xs font-bold transition-all"
           >
-            <Cpu size={14} className="text-cyan-400" />
-            <span>{showVisualizer ? 'Hide Queue Core' : 'Inspect Queue Core'}</span>
+            <Activity size={14} className="text-cyan-400" />
+            <span>{showBufferInspector ? 'Hide Telemetry Buffer' : 'Telemetry Buffer Stream'}</span>
           </button>
         </div>
       </div>
 
-      {dsaMode && (
-        <DsaBadge
-          module="1.5"
-          structure="Queue ADT & Ring Buffer (Linear, Circular, Priority)"
-          complexity="Enqueue O(1) • Dequeue O(1)"
-          explanation="Every car transponder transmits sector timing packets into a streaming FIFO queue. Live timing screens dequeue packets to update sector times, while high-priority emergency flags (Safety Car, Red Flag) jump the queue via Priority Queue."
-          active={dsaMode}
-        />
-      )}
-
-      {/* Embedded Queue Visualizer Drawer if opened */}
-      {showVisualizer && (
-        <div className="p-4 rounded-3xl bg-neutral-950 border border-cyan-500/30 shadow-[0_0_20px_rgba(6,182,212,0.1)]">
-          <div className="flex items-center justify-between pb-3 mb-4 border-b border-neutral-800">
+      {/* Embedded Buffer Drawer if opened */}
+      {showBufferInspector && (
+        <div className="p-5 rounded-3xl bg-[#1e1e24] border border-cyan-500/30 shadow-xl space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-white/10">
             <span className="text-xs font-mono font-bold uppercase text-cyan-400 flex items-center gap-2">
-              <Cpu size={14} /> Telemetry Queue Engine Visualizer (Syllabus 1.5, 1.6 & 2.5)
+              <Cpu size={14} /> High-Speed Telemetry Buffer Ring & Stream
             </span>
             <button
-              onClick={() => setShowVisualizer(false)}
+              onClick={() => setShowBufferInspector(false)}
               className="text-xs text-neutral-500 hover:text-white"
             >
               Close Drawer ✕
@@ -100,133 +112,109 @@ export const F1LiveTiming: React.FC<F1LiveTimingProps> = ({ dsaMode }) => {
 
       {/* Timing Board Header Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-3.5 rounded-2xl bg-neutral-900/60 border border-neutral-800">
+        <div className="p-3.5 rounded-2xl bg-[#1e1e24] border border-white/5">
           <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest block">Session Status</span>
           <span className="text-sm font-bold text-emerald-400 mt-0.5 flex items-center gap-1.5 font-mono">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            GREEN FLAG
+            FP3 GREEN FLAG
           </span>
         </div>
-        <div className="p-3.5 rounded-2xl bg-neutral-900/60 border border-neutral-800">
-          <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest block">Packets Dequeued</span>
-          <span className="text-sm font-bold text-white mt-0.5 font-mono">{telemetryCount} Frames (FIFO)</span>
+        <div className="p-3.5 rounded-2xl bg-[#1e1e24] border border-white/5">
+          <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest block">Frames Processed</span>
+          <span className="text-sm font-bold text-white mt-0.5 font-mono">{telemetryFrames} Packets</span>
         </div>
-        <div className="p-3.5 rounded-2xl bg-neutral-900/60 border border-neutral-800">
+        <div className="p-3.5 rounded-2xl bg-[#1e1e24] border border-white/5">
           <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest block">Fastest Lap</span>
-          <span className="text-sm font-bold text-purple-400 mt-0.5 font-mono">1:14.054 (NOR)</span>
+          <span className="text-sm font-bold text-purple-400 mt-0.5 font-mono">1:33.812 (RUS)</span>
         </div>
-        <div className="p-3.5 rounded-2xl bg-neutral-900/60 border border-neutral-800">
-          <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest block">Last Ingestion</span>
+        <div className="p-3.5 rounded-2xl bg-[#1e1e24] border border-white/5">
+          <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest block">Stream Ingestion</span>
           <span className="text-sm font-bold text-cyan-300 mt-0.5 font-mono">{lastUpdated}</span>
         </div>
       </div>
 
-      {/* Authentic F1 Leaderboard Table */}
-      <div className="rounded-3xl border border-white/10 bg-[#0f0f15] overflow-hidden shadow-2xl">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs font-mono">
-            <thead>
-              <tr className="bg-neutral-900/90 text-neutral-400 uppercase tracking-wider text-[11px] border-b border-white/10">
-                <th className="py-3.5 px-4 font-bold">POS</th>
-                <th className="py-3.5 px-3 font-bold">NO</th>
-                <th className="py-3.5 px-4 font-bold">DRIVER</th>
-                <th className="py-3.5 px-4 font-bold">GAP</th>
-                <th className="py-3.5 px-4 font-bold">INTERVAL</th>
-                <th className="py-3.5 px-4 font-bold">LAST LAP</th>
-                <th className="py-3.5 px-3 font-bold">S1</th>
-                <th className="py-3.5 px-3 font-bold">S2</th>
-                <th className="py-3.5 px-3 font-bold">S3</th>
-                <th className="py-3.5 px-3 font-bold text-center">TYRE</th>
-                <th className="py-3.5 px-3 font-bold text-center">PITS</th>
-                <th className="py-3.5 px-4 font-bold text-right">SPEED</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {drivers.map((driver) => {
-                const tyreBg =
-                  driver.tyre === 'SOFT'
-                    ? 'text-red-400 border-red-500/40 bg-red-950/30'
-                    : driver.tyre === 'MEDIUM'
-                    ? 'text-amber-400 border-amber-500/40 bg-amber-950/30'
-                    : 'text-neutral-200 border-neutral-400/40 bg-neutral-800/40';
+      {/* Authentic F1 Timing Board Table */}
+      <div className="rounded-3xl border border-white/5 bg-[#1e1e24] overflow-x-auto shadow-2xl">
+        <table className="w-full text-left text-xs font-mono min-w-[760px]">
+          <thead>
+            <tr className="bg-[#15151e] text-neutral-400 uppercase tracking-wider text-[11px] border-b border-white/10">
+              <th className="py-4 px-4 font-bold">POS</th>
+              <th className="py-4 px-3 font-bold">NO</th>
+              <th className="py-4 px-4 font-bold">DRIVER</th>
+              <th className="py-4 px-4 font-bold">GAP</th>
+              <th className="py-4 px-4 font-bold">INTERVAL</th>
+              <th className="py-4 px-4 font-bold">LAST LAP</th>
+              <th className="py-4 px-3 font-bold">S1</th>
+              <th className="py-4 px-3 font-bold">S2</th>
+              <th className="py-4 px-3 font-bold">S3</th>
+              <th className="py-4 px-3 font-bold text-center">TYRE</th>
+              <th className="py-4 px-3 font-bold text-center">PITS</th>
+              <th className="py-4 px-4 font-bold text-right">SPEED</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-white/5">
+            {drivers.map((driver) => {
+              const tyreClass =
+                driver.tyre === 'SOFT'
+                  ? 'text-red-400 border-red-500/40 bg-red-950/30'
+                  : driver.tyre === 'MEDIUM'
+                  ? 'text-amber-400 border-amber-500/40 bg-amber-950/30'
+                  : 'text-neutral-200 border-neutral-400/40 bg-neutral-800/40';
 
-                return (
-                  <tr
-                    key={driver.number}
-                    className="hover:bg-neutral-800/50 transition-colors group"
-                  >
-                    {/* Position */}
-                    <td className="py-3 px-4 font-black text-sm text-white">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="w-1 h-5 rounded-full"
-                          style={{ backgroundColor: driver.color }}
-                        />
-                        <span>{driver.pos}</span>
-                      </div>
-                    </td>
+              return (
+                <tr key={driver.number} className="hover:bg-neutral-800/40 transition-colors group">
+                  <td className="py-3 px-4 font-black text-sm text-white">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="w-1.5 h-6 rounded-full"
+                        style={{ backgroundColor: driver.color }}
+                      />
+                      <span>{driver.pos}</span>
+                    </div>
+                  </td>
 
-                    {/* Car Number */}
-                    <td className="py-3 px-3 text-neutral-400 font-bold">
-                      {driver.number}
-                    </td>
+                  <td className="py-3 px-3 text-neutral-400 font-bold">{driver.number}</td>
 
-                    {/* Driver Name & Team */}
-                    <td className="py-3 px-4">
-                      <div className="flex flex-col">
-                        <span className="font-bold text-white text-xs group-hover:text-red-400 transition-colors font-sans uppercase">
-                          {driver.name}
-                        </span>
-                        <span className="text-[10px] text-neutral-400 font-sans">
-                          {driver.team}
-                        </span>
-                      </div>
-                    </td>
-
-                    {/* Gap */}
-                    <td className="py-3 px-4 text-neutral-300 font-bold">
-                      {driver.gap}
-                    </td>
-
-                    {/* Interval */}
-                    <td className="py-3 px-4 text-neutral-400">
-                      {driver.interval}
-                    </td>
-
-                    {/* Last Lap Time */}
-                    <td className="py-3 px-4">
-                      <span className={driver.pos === 1 ? 'text-purple-400 font-bold' : 'text-neutral-200'}>
-                        {driver.lastLap}
+                  <td className="py-3 px-4">
+                    <div className="flex flex-col">
+                      <span className="font-bold text-white text-xs group-hover:text-red-400 transition-colors font-sans uppercase">
+                        {driver.name}
                       </span>
-                    </td>
-
-                    {/* Sectors */}
-                    <td className="py-3 px-3 text-neutral-300">{driver.s1}</td>
-                    <td className="py-3 px-3 text-purple-300 font-bold">{driver.s2}</td>
-                    <td className="py-3 px-3 text-neutral-300">{driver.s3}</td>
-
-                    {/* Tyre */}
-                    <td className="py-3 px-3 text-center">
-                      <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold border ${tyreBg}`}>
-                        {driver.tyre[0]} ({driver.tyreAge}L)
+                      <span className="text-[10px] text-neutral-400 font-sans">
+                        {driver.team}
                       </span>
-                    </td>
+                    </div>
+                  </td>
 
-                    {/* Pits */}
-                    <td className="py-3 px-3 text-center text-neutral-400">
-                      {driver.pits}
-                    </td>
+                  <td className="py-3 px-4 text-neutral-300 font-bold">{driver.gap}</td>
+                  <td className="py-3 px-4 text-neutral-400">{driver.interval}</td>
 
-                    {/* Speed Trap */}
-                    <td className="py-3 px-4 text-right font-bold text-cyan-400">
-                      {driver.speedTrap} <span className="text-[10px] text-neutral-500 font-normal">km/h</span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                  <td className="py-3 px-4">
+                    <span className={driver.pos === 1 ? 'text-purple-400 font-bold' : 'text-neutral-200'}>
+                      {driver.lastLap}
+                    </span>
+                  </td>
+
+                  <td className="py-3 px-3 text-neutral-300">{driver.s1}</td>
+                  <td className="py-3 px-3 text-purple-300 font-bold">{driver.s2}</td>
+                  <td className="py-3 px-3 text-neutral-300">{driver.s3}</td>
+
+                  <td className="py-3 px-3 text-center">
+                    <span className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold border ${tyreClass}`}>
+                      {driver.tyre[0]} ({driver.tyreAge}L)
+                    </span>
+                  </td>
+
+                  <td className="py-3 px-3 text-center text-neutral-400">{driver.pits}</td>
+
+                  <td className="py-3 px-4 text-right font-bold text-cyan-400">
+                    {driver.speedTrap} <span className="text-[10px] text-neutral-500 font-normal">km/h</span>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );

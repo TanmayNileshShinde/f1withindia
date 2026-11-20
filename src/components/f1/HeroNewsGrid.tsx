@@ -1,17 +1,24 @@
 import React from 'react';
-import { HERO_NEWS, SIDE_NEWS, TRENDING_NEWS } from '../../data/f1OfficialData';
+import { HERO_NEWS_ARTICLE, SIDE_NEWS_ARTICLES, TRENDING_NEWS_LIST, NewsArticleDetail } from '../../data/f1OfficialData';
 import { ChevronRight, Clock } from 'lucide-react';
 
-export const HeroNewsGrid: React.FC = () => {
+interface HeroNewsGridProps {
+  onSelectArticle: (article: NewsArticleDetail) => void;
+}
+
+export const HeroNewsGrid: React.FC<HeroNewsGridProps> = ({ onSelectArticle }) => {
   return (
     <section className="space-y-8">
       {/* 2/3 Hero + 1/3 Side Stack Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Left: Giant Main Hero Article */}
-        <div className="lg:col-span-8 group cursor-pointer relative overflow-hidden rounded-2xl bg-[#1e1e24] border border-white/5 f1-card-hover flex flex-col justify-end min-h-[440px] sm:min-h-[500px]">
+        <div
+          onClick={() => onSelectArticle(HERO_NEWS_ARTICLE)}
+          className="lg:col-span-8 group cursor-pointer relative overflow-hidden rounded-2xl bg-[#1e1e24] border border-white/5 f1-card-hover flex flex-col justify-end min-h-[440px] sm:min-h-[500px]"
+        >
           <img
-            src={HERO_NEWS.imageUrl}
-            alt={HERO_NEWS.title}
+            src={HERO_NEWS_ARTICLE.imageUrl}
+            alt={HERO_NEWS_ARTICLE.title}
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#15151e] via-[#15151e]/60 to-transparent" />
@@ -19,26 +26,27 @@ export const HeroNewsGrid: React.FC = () => {
           <div className="relative z-10 p-6 sm:p-8 space-y-3">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-1 bg-[#e10600] text-white text-[11px] font-black uppercase tracking-wider f1-skew-badge">
-                <span>{HERO_NEWS.category}</span>
+                <span>{HERO_NEWS_ARTICLE.category}</span>
               </span>
-              <span className="text-neutral-400 text-xs font-mono">{HERO_NEWS.timeAgo}</span>
+              <span className="text-neutral-400 text-xs font-mono">{HERO_NEWS_ARTICLE.timeAgo}</span>
             </div>
 
             <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white uppercase italic tracking-tight font-syne leading-none group-hover:text-red-400 transition-colors">
-              {HERO_NEWS.title}
+              {HERO_NEWS_ARTICLE.title}
             </h1>
 
             <p className="text-sm sm:text-base text-neutral-300 max-w-2xl font-sans leading-relaxed line-clamp-2">
-              {HERO_NEWS.summary}
+              {HERO_NEWS_ARTICLE.summary}
             </p>
           </div>
         </div>
 
         {/* Right: 4 Stacked Top Stories */}
         <div className="lg:col-span-4 flex flex-col justify-between gap-3">
-          {SIDE_NEWS.map((item) => (
+          {SIDE_NEWS_ARTICLES.map((item) => (
             <div
               key={item.id}
+              onClick={() => onSelectArticle(item)}
               className="group cursor-pointer p-3 sm:p-3.5 rounded-xl bg-[#1e1e24] border border-white/5 f1-card-hover flex items-center gap-4 flex-1"
             >
               <img
@@ -64,9 +72,10 @@ export const HeroNewsGrid: React.FC = () => {
 
       {/* 4 Trending Horizontal Cards Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {TRENDING_NEWS.map((item) => (
+        {TRENDING_NEWS_LIST.map((item) => (
           <div
             key={item.id}
+            onClick={() => onSelectArticle(item)}
             className="group cursor-pointer rounded-2xl bg-[#1e1e24] border border-white/5 overflow-hidden f1-card-hover flex flex-col justify-between"
           >
             <div className="relative h-44 overflow-hidden">
