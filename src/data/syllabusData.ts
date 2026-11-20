@@ -1,0 +1,195 @@
+import { DriverData } from '../types/dsa';
+
+export const F1_DRIVERS: DriverData[] = [
+  { number: 1, code: 'VER', name: 'Max Verstappen', team: 'Red Bull Racing', speed: 341.2, color: '#3671c6' },
+  { number: 4, code: 'NOR', name: 'Lando Norris', team: 'McLaren', speed: 339.8, color: '#ff8000' },
+  { number: 16, code: 'LEC', name: 'Charles Leclerc', team: 'Ferrari', speed: 340.5, color: '#e8002d' },
+  { number: 81, code: 'PIA', name: 'Oscar Piastri', team: 'McLaren', speed: 338.9, color: '#ff8000' },
+  { number: 55, code: 'SAI', name: 'Carlos Sainz', team: 'Ferrari', speed: 339.1, color: '#e8002d' },
+  { number: 63, code: 'RUS', name: 'George Russell', team: 'Mercedes-AMG', speed: 337.4, color: '#27f4d2' },
+  { number: 44, code: 'HAM', name: 'Lewis Hamilton', team: 'Mercedes-AMG', speed: 338.2, color: '#27f4d2' },
+  { number: 11, code: 'PER', name: 'Sergio Perez', team: 'Red Bull Racing', speed: 336.7, color: '#3671c6' },
+  { number: 14, code: 'ALO', name: 'Fernando Alonso', team: 'Aston Martin', speed: 335.8, color: '#229971' },
+  { number: 10, code: 'GAS', name: 'Pierre Gasly', team: 'Alpine', speed: 334.2, color: '#ff87bc' },
+];
+
+export const SYLLABUS_MODULES = [
+  {
+    id: 'module1',
+    number: 1,
+    title: 'Array-based Linear Data Structures',
+    hours: 6,
+    outcomes: ['CO1', 'CO5'],
+    tagline: 'High-speed contiguous memory buffers for telemetry packets & screen navigation',
+    topics: [
+      {
+        id: '1.1',
+        title: 'Importance and Key Areas for Data Structure',
+        f1Analogy: 'F1 cars stream 35MB of telemetry data per second. Fixed sequential buffers ensure deterministic O(1) latency under 300+ km/h conditions.',
+        theory: 'Data structures organize, store, and manage data efficiently for fast access and operations. In linear structures, elements form a sequence with 1-to-1 relationships.',
+      },
+      {
+        id: '1.2',
+        title: 'Linear and Nonlinear Data Structures',
+        f1Analogy: 'Linear: Successive lap times in an array. Nonlinear: Championship bracket trees and track layout graphs with multiple branches.',
+        theory: 'Linear data structures store items sequentially (Arrays, Stacks, Queues, Linked Lists). Non-linear structures store hierarchical or network data (Trees, Graphs).',
+      },
+      {
+        id: '1.3',
+        title: 'Stack Implementation (LIFO)',
+        f1Analogy: 'F1 mobile app screen navigation (Home -> News -> Live Timing). Pressing back pops the latest screen. In pit wall, managing tire compound history.',
+        theory: 'Last-In-First-Out (LIFO) ADT with top pointer. Core operations: push() O(1), pop() O(1), peek() O(1), isEmpty(), isFull().',
+      },
+      {
+        id: '1.4',
+        title: 'Stack Applications: Parenthesis & Infix/Postfix',
+        f1Analogy: 'Validating nested fuel consumption formulas: ((FuelRate * RPM) / Delta). Evaluating Reverse Polish Notation (RPN) for ECU sensors.',
+        theory: 'Parentheses balanced matching using stack pushes for opening brackets and pops for matching closing brackets. Infix to Postfix conversion handles operator precedence without parentheses.',
+      },
+      {
+        id: '1.5',
+        title: 'Queue Implementation (FIFO)',
+        f1Analogy: 'Live timing packet processing. Sector time updates arrive sequentially; first sector recorded is the first rendered on the broadcast screen.',
+        theory: 'First-In-First-Out (FIFO) ADT with front and rear indices. Operations: enqueue() adds to rear, dequeue() removes from front.',
+      },
+      {
+        id: '1.6',
+        title: 'Types of Queues: Linear, Circular, Deque, Priority Queue',
+        f1Analogy: 'Circular Queue: 20-lap rolling telemetry ring buffer. Deque: aerodynamic wing adjustments. Priority Queue: Safety Car pit emergency over routine stops.',
+        theory: 'Linear Queue: suffers memory waste after dequeues. Circular Queue: wraps using (rear + 1) % size. Double-Ended Queue (Deque): insert/delete at both ends. Priority Queue: dequeues by highest priority value.',
+      },
+    ],
+  },
+  {
+    id: 'module2',
+    number: 2,
+    title: 'Linked List-based Linear Data Structures',
+    hours: 8,
+    outcomes: ['CO2', 'CO5'],
+    tagline: 'Dynamic heap allocation for non-contiguous race lap histories & closed track loops',
+    topics: [
+      {
+        id: '2.1',
+        title: 'Representation of Linked List',
+        f1Analogy: 'Race lap sequence where each lap node points to the next. The race begins at Head (Lap 1) and ends when the pointer reaches NULL (Chequered Flag).',
+        theory: 'A collection of nodes stored non-contiguously in heap memory. Each node consists of [Data Field] and [Pointer to Next Node]. The list is accessed via the Head pointer.',
+      },
+      {
+        id: '2.2',
+        title: 'Difference between Array and Linked List',
+        f1Analogy: 'Array: Fixed 20-car grid on start. Linked List: Dynamic pit stop interventions where cars enter and leave safety car queues without shifting array elements.',
+        theory: 'Arrays offer O(1) random index access but static size and expensive O(n) insertions. Linked lists provide O(1) insertion/deletion at known nodes and dynamic sizing, but require O(n) sequential access.',
+      },
+      {
+        id: '2.3',
+        title: 'Memory Management in C: malloc(), calloc(), free()',
+        f1Analogy: 'Allocating dynamic memory on the fly for unexpected race incidents (Safety Car stints, Red Flag pauses), and freeing heap to prevent ECU memory leakage.',
+        theory: 'malloc(size): allocates uninitialized raw bytes. calloc(n, size): allocates zero-initialized memory. free(ptr): deallocates heap memory to prevent memory leaks and dangling pointers.',
+      },
+      {
+        id: '2.4',
+        title: 'Types of Linked Lists: Singly, Doubly, Circular',
+        f1Analogy: 'Singly: Chronological lap progression. Doubly: Steering wheel telemetry display with NEXT / PREV buttons. Circular: Closed circuit track layout (S1 -> S2 -> S3 -> S1).',
+        theory: 'Singly: unidirectional next pointer. Doubly: next and prev pointers enabling bidirectional traversal. Circular: last node next pointer links back to head, forming an endless cycle.',
+      },
+      {
+        id: '2.5',
+        title: 'Stack & Queue Implementation using Linked List',
+        f1Analogy: 'Unlimited telemetry logging buffer without static array overflow limitations.',
+        theory: 'Stack via LL: push and pop both occur at Head (O(1)). Queue via LL: enqueue occurs at Tail (O(1)), dequeue occurs at Head (O(1)). Completely eliminates Overflow conditions.',
+      },
+    ],
+  },
+  {
+    id: 'module3',
+    number: 3,
+    title: 'Non-Linear Data Structures (Trees & Graphs)',
+    hours: 12,
+    outcomes: ['CO3', 'CO5'],
+    tagline: 'Hierarchical race championship trees, balanced telemetry search, and track circuit sector networks',
+    topics: [
+      {
+        id: '3.1',
+        title: 'Tree Terminologies and Types of Trees',
+        f1Analogy: 'Championship playoff tree. Root is the World Champion. Leaves are eliminated drivers. Depth represents knockout rounds.',
+        theory: 'Hierarchical structure with a Root node and subtrees of children. Key terms: Parent, Child, Sibling, Degree, Level, Height, and Leaf.',
+      },
+      {
+        id: '3.2',
+        title: 'Binary Tree (BT): Creation, Traversal & Deletion',
+        f1Analogy: 'Aero downforce binary decision branch (High Downforce vs Low Drag). Traversed systematically using Inorder, Preorder, Postorder.',
+        theory: 'Each node has at most 2 children (left and right). Traversals: Preorder (Root, Left, Right), Inorder (Left, Root, Right), Postorder (Left, Right, Root).',
+      },
+      {
+        id: '3.3',
+        title: 'Binary Search Tree (BST): Search, Insert, Traversal, Delete',
+        f1Analogy: 'Indexing drivers by Car Number (#1, #4, #16, #44, #55, #63, #81). Inorder traversal yields grid positions in perfectly sorted ascending order!',
+        theory: 'Binary tree where Left Subtree < Root < Right Subtree. Searching and Insertion operate in O(h) time. Inorder traversal produces strictly sorted keys.',
+      },
+      {
+        id: '3.4',
+        title: 'Applications of BST: Expression Trees & Huffman Trees',
+        f1Analogy: 'Huffman encoding compresses pit-to-car encrypted voice telemetry, assigning shortest binary codes to frequent words ("BOX", "GAP", "PUSH").',
+        theory: 'Expression trees represent arithmetic equations where leaves are operands and internal nodes are operators. Huffman trees generate optimal prefix codes for lossless data compression.',
+      },
+      {
+        id: '3.5',
+        title: 'AVL Tree Rotations and Operations',
+        f1Analogy: 'Self-balancing telemetry index. If one driver racks up many rapid sector inputs, rotations rebalance the tree to guarantee sub-millisecond O(log n) lookups.',
+        theory: 'Self-balancing BST where Balance Factor = Height(Left) - Height(Right) is in {-1, 0, +1}. Rebalanced using 4 rotations: LL (Single Right), RR (Single Left), LR (Double), RL (Double).',
+      },
+      {
+        id: '3.6',
+        title: 'Advanced Trees: M-way, B-Tree, B+ Tree',
+        f1Analogy: 'Oracle Cloud & AWS databases powering F1 timing servers, storing terabytes of historical season telemetry across multi-level disk blocks.',
+        theory: 'Multi-way trees designed for disk storage. B-Trees maintain balanced keys in internal nodes; B+ Trees store all actual records in leaf nodes connected by a linked list for fast range queries.',
+      },
+      {
+        id: '3.7',
+        title: 'Graph Terminologies & Representation',
+        f1Analogy: 'Silverstone or Monaco circuit: Vertices = Corners/Chicanes, Edges = Straights/DRS Zones. Represented as Adjacency Matrix or Adjacency List.',
+        theory: 'Graph G = (V, E). Adjacency Matrix uses V x V 2D array (fast edge check O(1), high space O(V^2)). Adjacency List uses an array of linked lists (space-efficient O(V + E)).',
+      },
+      {
+        id: '3.8',
+        title: 'Graph Traversal: BFS & DFS',
+        f1Analogy: 'BFS: Safety/Medical car finding shortest path across all track sectors. DFS: Track marshal completing deep full-circuit barrier inspection.',
+        theory: 'Breadth-First Search (BFS) uses a Queue to explore level-by-level (finds shortest unweighted path). Depth-First Search (DFS) uses a Stack/Recursion to explore deeply along each branch.',
+      },
+      {
+        id: '3.9',
+        title: 'Graph Application: Topological Sorting',
+        f1Analogy: 'F1 Race Weekend workflow: Scrutineering -> FP1 -> FP2 -> FP3 -> Qualifying -> Parc Ferme -> Race Grid -> Grand Prix.',
+        theory: 'Linear ordering of vertices in a Directed Acyclic Graph (DAG) such that for every directed edge u -> v, vertex u comes before v. Used in task scheduling and prerequisite workflows.',
+      },
+    ],
+  },
+  {
+    id: 'module4',
+    number: 4,
+    title: 'Searching & Hashing',
+    hours: 4,
+    outcomes: ['CO4', 'CO5'],
+    tagline: 'Lightning-fast driver telemetry retrieval & collision-free pit garage lookup tables',
+    topics: [
+      {
+        id: '4.1',
+        title: 'Searching: Linear Search and Binary Search',
+        f1Analogy: 'Linear Search: Scanning unsorted race radio logs one by one (O(n)). Binary Search: Pinpointing exact speed trap records in a sorted leaderboard in O(log n).',
+        theory: 'Linear Search checks every item sequentially (works on unsorted data, O(n)). Binary Search divides a sorted search interval in half each step (O(log n)), requiring pre-sorted arrays.',
+      },
+      {
+        id: '4.2',
+        title: 'Hashing: Concept and Hash Functions',
+        f1Analogy: 'Mapping driver 3-letter abbreviations ("VER", "HAM", "NOR") to dedicated pit telemetry channels using hash formulas.',
+        theory: 'Hashing maps large keys to a fixed-size table index using a hash function h(k). Common functions: Division Method (k mod m), Mid-Square Method, and Folding Method.',
+      },
+      {
+        id: '4.3',
+        title: 'Collision Resolution Techniques',
+        f1Analogy: 'When two telemetry sensors map to the same garage channel. Linear Probing moves to next slot; Separate Chaining attaches multiple sensors to a linked bucket list.',
+        theory: 'Collisions occur when h(k1) == h(k2). Resolved via Open Addressing (Linear Probing, Quadratic Probing, Double Hashing) where items stay in the table, or Separate Chaining where buckets hold linked lists.',
+      },
+    ],
+  },
+];
