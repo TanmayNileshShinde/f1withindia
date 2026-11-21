@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ALL_10_TEAMS, TeamBio } from '../data/f1OfficialData';
-import { Trophy, ChevronRight, Wrench } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import TeamModal from '../components/f1/TeamModal';
 
 export const F1OfficialTeams: React.FC = () => {
@@ -24,8 +24,9 @@ export const F1OfficialTeams: React.FC = () => {
           <div
             key={team.id}
             onClick={() => setSelectedTeam(team)}
-            className="group cursor-pointer rounded-2xl bg-[#1e1e24] border border-white/5 overflow-hidden f1-card-hover p-6 flex flex-col justify-between relative"
+            className="group cursor-pointer rounded-2xl bg-[#1e1e24] border border-white/5 hover:border-red-600/40 overflow-hidden f1-card-hover p-6 flex flex-col justify-between relative transition-all duration-300"
           >
+            {/* Top Row: Pos, Name, Logo & Points */}
             <div className="flex items-start justify-between border-b border-white/10 pb-4">
               <div>
                 <div className="flex items-center gap-2">
@@ -41,14 +42,35 @@ export const F1OfficialTeams: React.FC = () => {
                 </h3>
               </div>
 
-              <div className="text-right">
-                <span className="text-2xl font-black text-white font-mono block">
-                  {team.points} <span className="text-xs text-neutral-400">PTS</span>
-                </span>
+              <div className="flex items-center gap-4 shrink-0">
+                {team.logoUrl && (
+                  <img
+                    src={team.logoUrl}
+                    alt={team.name}
+                    className="h-10 w-auto max-w-[80px] object-contain opacity-80 group-hover:opacity-100 transition-opacity drop-shadow"
+                  />
+                )}
+                <div className="text-right">
+                  <span className="text-2xl font-black text-white font-mono block">
+                    {team.points} <span className="text-xs text-neutral-400">PTS</span>
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 my-5 text-xs font-mono">
+            {/* Team Car Livery Visual */}
+            {team.carImageUrl && (
+              <div className="relative h-32 my-4 overflow-hidden rounded-xl bg-black/40 flex items-center justify-center p-3 group-hover:bg-black/60 transition-colors">
+                <img
+                  src={team.carImageUrl}
+                  alt={`${team.name} 2026 car`}
+                  className="w-full max-h-28 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.95)] group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            )}
+
+            {/* Team Specs */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 my-2 text-xs font-mono">
               <div>
                 <span className="text-neutral-500 uppercase text-[10px] block">Drivers</span>
                 <span className="text-white font-bold block">{team.drivers[0]}</span>
@@ -67,7 +89,8 @@ export const F1OfficialTeams: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-2">
+            {/* Footer */}
+            <div className="flex items-center justify-between pt-4 border-t border-white/5 mt-2">
               <span className="text-xs font-bold text-[#e10600] uppercase hover:underline flex items-center gap-1">
                 View Full Team Profile <ChevronRight size={13} />
               </span>

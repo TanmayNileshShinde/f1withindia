@@ -1,6 +1,7 @@
 import React from 'react';
-import { X, Trophy, Award, Flag, Calendar, MapPin, Activity } from 'lucide-react';
+import { X } from 'lucide-react';
 import { DriverBio } from '../../data/f1OfficialData';
+import CountryFlag from './CountryFlag';
 
 interface DriverModalProps {
   driver: DriverBio | null;
@@ -15,8 +16,8 @@ export const DriverModal: React.FC<DriverModalProps> = ({ driver, onClose }) => 
       <div className="relative w-full max-w-2xl bg-[#161620] border border-white/10 rounded-3xl overflow-hidden shadow-2xl my-8 flex flex-col">
         {/* Top Header */}
         <div
-          className="p-6 sm:p-8 flex items-start justify-between relative overflow-hidden"
-          style={{ background: `linear-gradient(135deg, ${driver.teamColor}25 0%, #161620 90%)` }}
+          className="p-6 sm:p-8 flex items-start justify-between relative overflow-hidden min-h-[160px]"
+          style={{ background: `linear-gradient(135deg, ${driver.teamColor}35 0%, #161620 90%)` }}
         >
           <div className="z-10 space-y-1">
             <span className="text-5xl font-black text-white italic font-syne leading-none block">
@@ -30,12 +31,15 @@ export const DriverModal: React.FC<DriverModalProps> = ({ driver, onClose }) => 
                 {driver.lastName}
               </h2>
             </div>
-            <p
-              className="text-xs font-bold uppercase tracking-wider font-mono pt-1"
-              style={{ color: driver.teamColor }}
-            >
-              {driver.team}
-            </p>
+            <div className="flex items-center gap-2 pt-1">
+              <CountryFlag code={driver.countryFlag} size="sm" />
+              <p
+                className="text-xs font-bold uppercase tracking-wider font-mono"
+                style={{ color: driver.teamColor }}
+              >
+                {driver.team}
+              </p>
+            </div>
           </div>
 
           <button
@@ -49,7 +53,7 @@ export const DriverModal: React.FC<DriverModalProps> = ({ driver, onClose }) => 
           <img
             src={driver.portraitUrl}
             alt={driver.lastName}
-            className="absolute right-0 bottom-0 w-44 sm:w-56 h-full object-cover object-top opacity-50 pointer-events-none"
+            className="absolute right-4 bottom-0 w-44 sm:w-56 h-[90%] object-contain object-bottom opacity-90 pointer-events-none drop-shadow-[0_12px_24px_rgba(0,0,0,0.9)] z-0"
           />
         </div>
 
@@ -87,9 +91,12 @@ export const DriverModal: React.FC<DriverModalProps> = ({ driver, onClose }) => 
 
           {/* Career Specs Table */}
           <div className="rounded-2xl bg-neutral-900/60 border border-white/5 p-4 space-y-3 text-xs font-mono">
-            <div className="flex justify-between border-b border-white/5 pb-2 text-neutral-300">
+            <div className="flex items-center justify-between border-b border-white/5 pb-2 text-neutral-300">
               <span className="text-neutral-500">Country of Origin:</span>
-              <span className="text-white font-bold">{driver.country} ({driver.countryFlag})</span>
+              <span className="text-white font-bold flex items-center gap-1.5">
+                <CountryFlag code={driver.countryFlag} size="sm" />
+                {driver.country}
+              </span>
             </div>
             <div className="flex justify-between border-b border-white/5 pb-2 text-neutral-300">
               <span className="text-neutral-500">Date & Place of Birth:</span>

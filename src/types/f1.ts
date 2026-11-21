@@ -82,6 +82,8 @@ export interface F1TeamCard {
   powerUnit: string;
   teamPrincipal: string;
   drivers: string[];
+  logoUrl?: string;
+  carImageUrl?: string;
 }
 
 export interface F1NewsItem {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FULL_24_CALENDAR, RESULTS_2025_DATA, FASTEST_LAPS_DATA } from '../data/f1OfficialData';
 import { Trophy, Clock, Flag, Award, Zap } from 'lucide-react';
+import CountryFlag from '../components/f1/CountryFlag';
 
 export const F1OfficialResults: React.FC = () => {
   const [selectedYear, setSelectedYear] = useState<'2026' | '2025'>('2026');
@@ -108,9 +109,7 @@ export const F1OfficialResults: React.FC = () => {
                   <tr key={race.round} className="hover:bg-neutral-800/40 transition-colors group">
                     <td className="py-4 px-4 font-bold text-white text-sm">
                       <div className="flex items-center gap-2">
-                        <span className="px-1.5 py-0.5 rounded bg-black/40 text-[10px] font-mono text-neutral-300 font-bold">
-                          {race.flag}
-                        </span>
+                        <CountryFlag code={race.flag} size="sm" />
                         <span className="group-hover:text-red-400 transition-colors font-sans uppercase">
                           {race.country}
                         </span>

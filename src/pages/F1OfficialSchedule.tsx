@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { FULL_24_CALENDAR, TrackDetail } from '../data/f1OfficialData';
-import { Calendar, MapPin, ChevronRight, Trophy } from 'lucide-react';
+import { MapPin, ChevronRight, Trophy } from 'lucide-react';
 import CircuitModal from '../components/f1/CircuitModal';
+import CountryFlag from '../components/f1/CountryFlag';
 
 export const F1OfficialSchedule: React.FC = () => {
   const [selectedCircuit, setSelectedCircuit] = useState<TrackDetail | null>(null);
@@ -44,9 +45,7 @@ export const F1OfficialSchedule: React.FC = () => {
 
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded bg-black/40 text-neutral-300 font-mono text-xs font-bold">
-                    {race.flag}
-                  </span>
+                  <CountryFlag code={race.flag} size="md" />
                   <span className="font-bold text-white text-lg uppercase font-syne">
                     {race.country}
                   </span>

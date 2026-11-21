@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ALL_20_DRIVERS, DriverBio } from '../data/f1OfficialData';
-import { Trophy, Award, ChevronRight } from 'lucide-react';
 import DriverModal from '../components/f1/DriverModal';
+import CountryFlag from '../components/f1/CountryFlag';
 
 export const F1OfficialDrivers: React.FC = () => {
   const [selectedDriver, setSelectedDriver] = useState<DriverBio | null>(null);
@@ -24,7 +24,7 @@ export const F1OfficialDrivers: React.FC = () => {
           <div
             key={driver.id}
             onClick={() => setSelectedDriver(driver)}
-            className="group cursor-pointer rounded-2xl bg-[#1e1e24] border border-white/5 overflow-hidden f1-card-hover flex flex-col justify-between h-[390px] relative"
+            className="group cursor-pointer rounded-2xl bg-[#1e1e24] border border-white/5 hover:border-red-600/40 overflow-hidden f1-card-hover flex flex-col justify-between h-[410px] relative transition-all duration-300"
           >
             {/* Top Info */}
             <div className="p-5 z-10">
@@ -33,11 +33,9 @@ export const F1OfficialDrivers: React.FC = () => {
                   <span className="text-4xl font-black text-white font-syne italic block leading-none">
                     #{driver.number}
                   </span>
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <span className="px-1.5 py-0.5 rounded bg-black/50 text-[10px] font-mono text-neutral-300 font-bold">
-                      {driver.countryFlag}
-                    </span>
-                    <span className="text-[10px] font-mono text-neutral-400 uppercase font-bold">
+                  <div className="flex items-center gap-2 mt-2">
+                    <CountryFlag code={driver.countryFlag} size="sm" />
+                    <span className="text-[11px] font-mono text-neutral-400 uppercase font-bold tracking-wider">
                       {driver.country}
                     </span>
                   </div>
@@ -54,7 +52,7 @@ export const F1OfficialDrivers: React.FC = () => {
               </div>
 
               <div className="mt-4 pt-3 border-t border-white/10">
-                <span className="text-sm font-medium text-neutral-300 block">
+                <span className="text-xs font-medium text-neutral-400 block tracking-wide">
                   {driver.firstName}
                 </span>
                 <span className="text-xl font-black text-white uppercase italic tracking-tight font-syne block group-hover:text-red-400 transition-colors">
@@ -70,15 +68,15 @@ export const F1OfficialDrivers: React.FC = () => {
             </div>
 
             {/* Driver Portrait Photo Background */}
-            <div className="relative h-48 overflow-hidden mt-auto">
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1e1e24] via-transparent to-transparent z-10" />
+            <div className="relative h-56 overflow-hidden mt-auto flex items-end justify-center">
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1e1e24] via-transparent to-transparent z-10 pointer-events-none" />
               <img
                 src={driver.portraitUrl}
-                alt={driver.lastName}
-                className="w-full h-full object-cover object-top opacity-60 group-hover:scale-105 group-hover:opacity-85 transition-all duration-300"
+                alt={`${driver.firstName} ${driver.lastName}`}
+                className="w-auto h-full max-h-52 object-contain object-bottom drop-shadow-[0_12px_24px_rgba(0,0,0,0.85)] group-hover:scale-105 transition-transform duration-300 z-0"
               />
               <span
-                className="absolute bottom-0 left-0 right-0 h-1.5"
+                className="absolute bottom-0 left-0 right-0 h-1.5 z-20"
                 style={{ backgroundColor: driver.teamColor }}
               />
             </div>

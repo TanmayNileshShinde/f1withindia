@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Trophy, Award, MapPin, Calendar, Wrench, Zap } from 'lucide-react';
+import { X } from 'lucide-react';
 import { TeamBio } from '../../data/f1OfficialData';
 
 interface TeamModalProps {
@@ -35,16 +35,36 @@ export const TeamModal: React.FC<TeamModalProps> = ({ team, onClose }) => {
             </div>
           </div>
 
-          <button
-            onClick={onClose}
-            className="z-20 p-2 rounded-xl bg-neutral-900/80 hover:bg-neutral-800 text-neutral-400 hover:text-white border border-white/5 transition-all"
-          >
-            <X size={18} />
-          </button>
+          <div className="z-20 flex items-center gap-3">
+            {team.logoUrl && (
+              <img
+                src={team.logoUrl}
+                alt={team.name}
+                className="h-10 w-auto max-w-[80px] object-contain opacity-90 drop-shadow hidden sm:block"
+              />
+            )}
+            <button
+              onClick={onClose}
+              className="p-2 rounded-xl bg-neutral-900/80 hover:bg-neutral-800 text-neutral-400 hover:text-white border border-white/5 transition-all"
+            >
+              <X size={18} />
+            </button>
+          </div>
         </div>
 
         {/* Content */}
         <div className="p-6 sm:p-8 space-y-6 overflow-y-auto">
+          {/* Team Car Livery in Modal */}
+          {team.carImageUrl && (
+            <div className="relative h-36 overflow-hidden rounded-2xl bg-black/50 flex items-center justify-center p-4 border border-white/5">
+              <img
+                src={team.carImageUrl}
+                alt={`${team.name} 2026 Car`}
+                className="w-full max-h-32 object-contain drop-shadow-[0_12px_24px_rgba(0,0,0,0.95)]"
+              />
+            </div>
+          )}
+
           {/* Stats Bar */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="p-3.5 rounded-2xl bg-neutral-900/80 border border-white/5 text-center">

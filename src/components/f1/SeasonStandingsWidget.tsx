@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { DRIVERS_2026, TEAMS_2026, DriverBio, TeamBio } from '../../data/f1OfficialData';
-import { ChevronRight, ChevronDown, Trophy } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { F1NavPage } from '../../types/f1';
+import CountryFlag from './CountryFlag';
 
 interface SeasonStandingsWidgetProps {
   onNavigate: (page: F1NavPage) => void;
@@ -78,7 +79,7 @@ export const SeasonStandingsWidget: React.FC<SeasonStandingsWidgetProps> = ({ on
 
               <div className="z-10 mt-auto">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">{top3[0].countryFlag}</span>
+                  <CountryFlag code={top3[0].countryFlag} size="sm" />
                   <span className="text-xs font-mono text-neutral-300 font-bold uppercase">{top3[0].country}</span>
                 </div>
                 <h3 className="text-2xl sm:text-3xl font-black text-white uppercase italic tracking-tight font-syne group-hover:text-red-400 transition-colors">
@@ -94,7 +95,7 @@ export const SeasonStandingsWidget: React.FC<SeasonStandingsWidgetProps> = ({ on
               <img
                 src={top3[0].portraitUrl}
                 alt={top3[0].lastName}
-                className="absolute right-0 bottom-0 w-44 sm:w-56 h-full object-cover object-top opacity-50 sm:opacity-75 mask-gradient pointer-events-none"
+                className="absolute right-0 bottom-0 w-44 sm:w-60 h-[95%] object-contain object-bottom opacity-80 sm:opacity-95 pointer-events-none drop-shadow-[0_12px_24px_rgba(0,0,0,0.9)]"
               />
             </div>
 
@@ -110,7 +111,10 @@ export const SeasonStandingsWidget: React.FC<SeasonStandingsWidgetProps> = ({ on
               </div>
 
               <div className="z-10 mt-auto">
-                <span className="text-base">{top3[1].countryFlag}</span>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <CountryFlag code={top3[1].countryFlag} size="sm" />
+                  <span className="text-[10px] font-mono text-neutral-300 font-bold uppercase">{top3[1].country}</span>
+                </div>
                 <h4 className="text-lg font-black text-white uppercase italic tracking-tight font-syne leading-tight mt-1">
                   {top3[1].firstName} <br />
                   {top3[1].lastName}
@@ -123,7 +127,7 @@ export const SeasonStandingsWidget: React.FC<SeasonStandingsWidgetProps> = ({ on
               <img
                 src={top3[1].portraitUrl}
                 alt={top3[1].lastName}
-                className="absolute right-[-10px] bottom-0 w-36 h-48 object-cover object-top opacity-40 pointer-events-none"
+                className="absolute right-0 bottom-0 w-36 h-[85%] object-contain object-bottom opacity-75 sm:opacity-90 pointer-events-none drop-shadow-[0_12px_24px_rgba(0,0,0,0.9)]"
               />
             </div>
 
@@ -139,7 +143,10 @@ export const SeasonStandingsWidget: React.FC<SeasonStandingsWidgetProps> = ({ on
               </div>
 
               <div className="z-10 mt-auto">
-                <span className="text-base">{top3[2].countryFlag}</span>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <CountryFlag code={top3[2].countryFlag} size="sm" />
+                  <span className="text-[10px] font-mono text-neutral-300 font-bold uppercase">{top3[2].country}</span>
+                </div>
                 <h4 className="text-lg font-black text-white uppercase italic tracking-tight font-syne leading-tight mt-1">
                   {top3[2].firstName} <br />
                   {top3[2].lastName}
@@ -152,7 +159,7 @@ export const SeasonStandingsWidget: React.FC<SeasonStandingsWidgetProps> = ({ on
               <img
                 src={top3[2].portraitUrl}
                 alt={top3[2].lastName}
-                className="absolute right-[-10px] bottom-0 w-36 h-48 object-cover object-top opacity-40 pointer-events-none"
+                className="absolute right-0 bottom-0 w-36 h-[85%] object-contain object-bottom opacity-75 sm:opacity-90 pointer-events-none drop-shadow-[0_12px_24px_rgba(0,0,0,0.9)]"
               />
             </div>
           </div>
@@ -174,7 +181,7 @@ export const SeasonStandingsWidget: React.FC<SeasonStandingsWidgetProps> = ({ on
                     </td>
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm">{d.countryFlag}</span>
+                        <CountryFlag code={d.countryFlag} size="sm" />
                         <span className="font-bold text-white uppercase font-sans">
                           {d.firstName} {d.lastName}
                         </span>

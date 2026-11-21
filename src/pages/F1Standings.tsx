@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Trophy, Search, Cpu, GitBranch, ArrowRight, CheckCircle2, Zap } from 'lucide-react';
 import { ALL_20_DRIVERS, ALL_10_TEAMS } from '../data/f1OfficialData';
+import CountryFlag from '../components/f1/CountryFlag';
 
 export const F1Standings: React.FC = () => {
   const [standingsTab, setStandingsTab] = useState<'drivers' | 'constructors'>('drivers');
@@ -171,7 +172,12 @@ export const F1Standings: React.FC = () => {
                       {driver.firstName} {driver.lastName}
                     </span>
                   </td>
-                  <td className="py-3.5 px-4 text-neutral-400 uppercase">{driver.country} ({driver.countryFlag})</td>
+                  <td className="py-3.5 px-4 text-neutral-400 uppercase">
+                    <div className="flex items-center gap-1.5">
+                      <CountryFlag code={driver.countryFlag} size="sm" />
+                      <span>{driver.country}</span>
+                    </div>
+                  </td>
                   <td className="py-3.5 px-4 text-neutral-300 font-sans">{driver.team}</td>
                   <td className="py-3.5 px-4 text-center text-neutral-400 font-bold">{driver.podiums}</td>
                   <td className="py-3.5 px-4 text-right font-black text-white text-sm">
@@ -207,7 +213,16 @@ export const F1Standings: React.FC = () => {
                     </div>
                   </td>
                   <td className="py-4 px-4 font-bold text-white text-sm font-sans uppercase group-hover:text-red-400 transition-colors">
-                    {team.fullName}
+                    <div className="flex items-center gap-2.5">
+                      {team.logoUrl && (
+                        <img
+                          src={team.logoUrl}
+                          alt={team.name}
+                          className="h-6 w-auto max-w-[40px] object-contain opacity-80"
+                        />
+                      )}
+                      <span>{team.fullName}</span>
+                    </div>
                   </td>
                   <td className="py-4 px-4 text-neutral-400 font-sans">
                     {team.drivers.join(' & ')}
